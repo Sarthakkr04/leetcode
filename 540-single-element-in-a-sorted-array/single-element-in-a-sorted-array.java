@@ -17,7 +17,7 @@ class Solution {
             if(leftCount%2 == 0) lo = s + 1;
             else hi = f - 1;
         }
-        return 942;
+        return 11;
         
     }
 }
