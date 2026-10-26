@@ -1,30 +1,63 @@
 class Solution {
     public int daysBetweenDates(String date1, String date2) {
-        return Math.abs(calcDays(date1) - calcDays(date2));
-    }
+        int d1 = Integer.parseInt(date1.substring(8));
+        int m1 = Integer.parseInt(date1.substring(5, 7));
+        int y1 = Integer.parseInt(date1.substring(0, 4));
 
-    private boolean isLeapYear(int year) {
-        return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
-    }
+        int d2 = Integer.parseInt(date2.substring(8));
+        int m2 = Integer.parseInt(date2.substring(5, 7));
+        int y2 = Integer.parseInt(date2.substring(0, 4));
 
-    private int daysInMonth(int year, int month) {
-        int[] days = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        days[1] += isLeapYear(year) ? 1 : 0;
-        return days[month - 1];
-    }
+        if (y1 > y2 || (y1 == y2 && m1 > m2) ||(y1 == y2 && m1 == m2 && d1 > d2)) {
 
-    private int calcDays(String date) {
-        int year = Integer.parseInt(date.substring(0, 4));
-        int month = Integer.parseInt(date.substring(5, 7));
-        int day = Integer.parseInt(date.substring(8));
+            int temp;
+
+            temp = d1;
+            d1 = d2;
+            d2 = temp;
+
+            temp = m1;
+            m1 = m2;
+            m2 = temp;
+
+            temp = y1;
+            y1 = y2;
+            y2 = temp;
+        }
+
         int days = 0;
-        for (int y = 1971; y < year; y++) {
-            days += isLeapYear(y) ? 366 : 365;
+
+        while (d1 != d2 || m1 != m2 || y1 != y2) {
+            days++;
+            d1++;
+
+            int maxdays;
+
+            if (m1 == 2) {
+                if ((y1 % 400 == 0) ||
+                    (y1 % 4 == 0 && y1 % 100 != 0)) {
+                    maxdays = 29;
+                } else {
+                    maxdays = 28;
+                }
+            } else if (m1 == 4 || m1 == 6 ||
+                       m1 == 9 || m1 == 11) {
+                maxdays = 30;
+            } else {
+                maxdays = 31;
+            }
+
+            if (d1 > maxdays) {
+                d1 = 1;
+                m1++;
+
+                if (m1 > 12) {
+                    m1 = 1;
+                    y1++;
+                }
+            }
         }
-        for (int m = 1; m < month; m++) {
-            days += daysInMonth(year, m);
-        }
-        days += day;
+
         return days;
     }
 }
